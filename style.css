@@ -28,7 +28,7 @@
 .res-card {
   margin: 5px;
   padding: 5px;
-  width: 190px;
+  width: 270px;
   background-color: #f0f0f0;
   box-shadow: 7px 7px 5px gray;
 }
@@ -49,4 +49,8 @@
 
 .res-logo {
   width: 100%;
+}
+
+.resName {
+  color: darkolivegreen;
 }
