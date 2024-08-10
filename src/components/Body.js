@@ -1,68 +1,63 @@
-import resObj from "../utils/testData";
 import RestaurantCard from "./RestaurantCard";
 import { useState } from "react";
+import { useEffect } from "react";
+import { SWIGGY_API } from "../utils/constants";
+import Shimmer from "./Shimmer";
 
 const Body = () => {
   //State Variable
-  let [listOfRestaurant, setListOfRestaurant] = useState(resObj);
-  let dupListOfResttaurant = resObj; //So what before filtering we have all data
+  let [listOfRestaurant, setListOfRestaurant] = useState([]);
+  let [filterListOfRestaurant, setFilterListOfRestaurant] = useState([]);
 
-  //Normal JS variable
-  // let listOfRestaurant2 = [
-  //   {
-  //     info: {
-  //       id: "175281",
-  //       name: "Jalaram Locho & Khaman",
-  //       cloudinaryImageId: "ilmplqyvasqq0igkmobz",
-  //       costForTwo: "₹250 for two",
-  //       cuisines: ["Gujarati", "Snacks", "Fast Food", "Street Food", "Indian"],
-  //       avgRating: 4.4,
-  //       veg: true,
-  //       sla: {
-  //         deliveryTime: 34,
-  //       },
-  //     },
-  //   },
-  //   {
-  //     info: {
-  //       id: "175282",
-  //       name: "KFC",
-  //       cloudinaryImageId: "ilmplqyvasqq0igkmobz",
-  //       costForTwo: "₹250 for two",
-  //       cuisines: ["Gujarati", "Snacks", "Fast Food", "Street Food", "Indian"],
-  //       avgRating: 3.4,
-  //       veg: true,
-  //       sla: {
-  //         deliveryTime: 44,
-  //       },
-  //     },
-  //   },
-  //   {
-  //     info: {
-  //       id: "175261",
-  //       name: "Burger King",
-  //       cloudinaryImageId: "ilmplqyvasqq0igkmobz",
-  //       costForTwo: "₹250 for two",
-  //       cuisines: ["Gujarati", "Snacks", "Fast Food", "Street Food", "Indian"],
-  //       avgRating: 4.2,
-  //       veg: true,
-  //       sla: {
-  //         deliveryTime: 24,
-  //       },
-  //     },
-  //   },
-  // ];
-  return (
+  let [searchFilter, setSearchFilter] = useState("");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await fetch(SWIGGY_API);
+    const json = await data.json();
+    console.log(json);
+    setListOfRestaurant(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
+    setFilterListOfRestaurant(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
+  };
+
+  return listOfRestaurant.length === 0 ? (
+    <Shimmer />
+  ) : (
     <div className="body">
       <div className="top-rated">
+        <input
+          type="text"
+          placeholder="Search Restaurants.."
+          value={searchFilter}
+          onChange={(e) => {
+            setSearchFilter(e.target.value);
+          }}
+        />
+        <button
+          className="btn-search"
+          onClick={() => {
+            const filteredData = listOfRestaurant.filter((e) =>
+              e.info.name.toLowerCase().includes(searchFilter.toLowerCase())
+            );
+            setFilterListOfRestaurant(filteredData);
+          }}
+        >
+          Search
+        </button>
         <button
           className="res-btn"
           onClick={() => {
-            listOfRestaurant = dupListOfResttaurant;
             filteredList = listOfRestaurant.filter(
-              (res) => res.info.avgRating > 4
+              (res) => res.info.avgRating > 4.4
             );
-            setListOfRestaurant(filteredList);
+            setFilterListOfRestaurant(filteredList);
           }}
         >
           Top Rated Restaurants
@@ -70,9 +65,8 @@ const Body = () => {
         <button
           className="veg-btn"
           onClick={() => {
-            listOfRestaurant = dupListOfResttaurant;
             vegList = listOfRestaurant.filter((res) => res.info.veg === true);
-            setListOfRestaurant(vegList);
+            setFilterListOfRestaurant(vegList);
           }}
         >
           Veg
@@ -80,18 +74,17 @@ const Body = () => {
         <button
           className="non-veg-btn"
           onClick={() => {
-            listOfRestaurant = dupListOfResttaurant;
             nonVegList = listOfRestaurant.filter(
-              (res) => res.info.veg === false
+              (res) => res.info.veg === undefined
             );
-            setListOfRestaurant(nonVegList);
+            setFilterListOfRestaurant(nonVegList);
           }}
         >
           Non-Veg
         </button>
       </div>
       <div className="res-container">
-        {listOfRestaurant.map((restaurant) => (
+        {filterListOfRestaurant.map((restaurant) => (
           <RestaurantCard key={restaurant.info.id} resData={restaurant} />
         ))}
       </div>
