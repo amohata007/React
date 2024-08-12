@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { SWIGGY_API } from "../utils/constants";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 
 const Body = () => {
   //State Variable
@@ -27,7 +28,7 @@ const Body = () => {
     );
   };
 
-  return listOfRestaurant.length === 0 ? (
+  return listOfRestaurant?.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
@@ -85,7 +86,12 @@ const Body = () => {
       </div>
       <div className="res-container">
         {filterListOfRestaurant.map((restaurant) => (
-          <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+          <Link
+            key={restaurant.info.id}
+            to={"/restaurants/" + restaurant.info.id}
+          >
+            <RestaurantCard resData={restaurant} />
+          </Link>
         ))}
       </div>
     </div>
