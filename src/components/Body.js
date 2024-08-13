@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { SWIGGY_API } from "../utils/constants";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   //State Variable
@@ -27,6 +28,16 @@ const Body = () => {
       json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
     );
   };
+
+  const checkOnline = useOnlineStatus();
+
+  if (checkOnline === false) {
+    return (
+      <h1>
+        Looks like you don't have active Internet Connection. Please Check.
+      </h1>
+    );
+  }
 
   return listOfRestaurant?.length === 0 ? (
     <Shimmer />
