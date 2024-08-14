@@ -1,4 +1,4 @@
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
 import { useState } from "react";
 import { useEffect } from "react";
 import { SWIGGY_API } from "../utils/constants";
@@ -12,6 +12,7 @@ const Body = () => {
   let [filterListOfRestaurant, setFilterListOfRestaurant] = useState([]);
 
   let [searchFilter, setSearchFilter] = useState("");
+  let RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
 
   useEffect(() => {
     fetchData();
@@ -102,7 +103,11 @@ const Body = () => {
             key={restaurant.info.id}
             to={"/restaurants/" + restaurant.info.id}
           >
-            <RestaurantCard resData={restaurant} />
+            {!restaurant.info.veg ? (
+              <RestaurantCardPromoted resData={restaurant} />
+            ) : (
+              <RestaurantCard resData={restaurant} />
+            )}
           </Link>
         ))}
       </div>
