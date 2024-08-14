@@ -43,17 +43,18 @@ const Body = () => {
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="top-rated">
+      <div className="mx-2 px-2 my-1 py-1">
         <input
           type="text"
           placeholder="Search Restaurants.."
+          className="border border-solid border-black px-2 m-2"
           value={searchFilter}
           onChange={(e) => {
             setSearchFilter(e.target.value);
           }}
         />
         <button
-          className="btn-search"
+          className="mx-2  bg-gray-100 rounded-lg"
           onClick={() => {
             const filteredData = listOfRestaurant.filter((e) =>
               e.info.name.toLowerCase().includes(searchFilter.toLowerCase())
@@ -64,7 +65,7 @@ const Body = () => {
           Search
         </button>
         <button
-          className="res-btn"
+          className="mx-2 bg-blue-100"
           onClick={() => {
             filteredList = listOfRestaurant.filter(
               (res) => res.info.avgRating > 4.4
@@ -75,7 +76,7 @@ const Body = () => {
           Top Rated Restaurants
         </button>
         <button
-          className="veg-btn"
+          className="mx-2 bg-green-100 px-2 mx-2"
           onClick={() => {
             vegList = listOfRestaurant.filter((res) => res.info.veg === true);
             setFilterListOfRestaurant(vegList);
@@ -84,7 +85,7 @@ const Body = () => {
           Veg
         </button>
         <button
-          className="non-veg-btn"
+          className="mx-2 bg-red-100 px-2 mx-2"
           onClick={() => {
             nonVegList = listOfRestaurant.filter(
               (res) => res.info.veg === undefined
@@ -95,7 +96,7 @@ const Body = () => {
           Non-Veg
         </button>
       </div>
-      <div className="res-container">
+      <div className="flex flex-wrap space-y-4">
         {filterListOfRestaurant.map((restaurant) => (
           <Link
             key={restaurant.info.id}
